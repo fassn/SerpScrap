@@ -8,6 +8,8 @@ import os
 import pprint
 import shutil
 
+from collections import OrderedDict
+
 from scrapcore.core import Core
 from scrapcore.logger import Logger
 from serpscrap.config import Config
@@ -149,7 +151,7 @@ class SerpScrap():
                         'rank': related_keyword.rank
                     })
                 for link in serp.links:
-                    self.results.append({
+                    d = {
                         'query_num_results total': serp.num_results_for_query,
                         'query_num_results_page': serp.num_results,
                         'query_page_number': serp.page_number,
@@ -170,7 +172,8 @@ class SerpScrap():
                             serp.query,
                             str(serp.page_number),
                         ))
-                    })
+                    }
+                    self.results.append(OrderedDict(sorted(d.items(), key=lambda t: t[0])))
             return self.results
         else:
             raise Exception('No Results')

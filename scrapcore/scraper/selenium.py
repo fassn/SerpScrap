@@ -263,10 +263,18 @@ class SelScrape(SearchEngineScrape, threading.Thread):
                         self.proxy.port
                     )
                 )
-                self.webdriver = webdriver.Chrome(
-                    executable_path=self.config['executable_path'],
-                    chrome_options=chrome_ops
-                )
+
+                while True:
+                    try:
+                        self.webdriver = webdriver.Chrome(
+                            executable_path=self.config['executable_path'],
+                            chrome_options=chrome_ops
+                        )
+                        break
+                    except WebDriverException:
+                        time.sleep(7)
+
+                    time.sleep(1)
 
             if self.config.get('chrome_headless') is True:
                 chrome_ops.add_argument('--headless')
@@ -286,15 +294,21 @@ class SelScrape(SearchEngineScrape, threading.Thread):
                     randint(600, 900)
                 )
             )
-            self.webdriver = webdriver.Chrome(
-                executable_path=self.config['executable_path'],
-                chrome_options=chrome_ops
-            )
+            while True:
+                try:
+                    self.webdriver = webdriver.Chrome(
+                        executable_path=self.config['executable_path'],
+                        chrome_options=chrome_ops
+                    )
+                    break
+                except WebDriverException:
+                    time.sleep(7)
+
+                time.sleep(1)
             return True
         except WebDriverException as e:
             logger.error(e)
             raise
-        return False
 
     def _get_Firefox(self):
         try:

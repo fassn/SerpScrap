@@ -121,12 +121,11 @@ class Core():
             # used in selenium instances.
             captcha_lock = threading.Lock()
 
-            self.logger.info('''
-                Going to scrape {num_keywords} keywords with {num_proxies}
-                proxies by using {num_threads} threads.'''.format(
+            self.logger.info('Going to scrape {num_keywords} keywords with {num_proxies} proxies in {num_search_engines} search engine(s) by using {num_threads} threads.'.format(
                 num_keywords=len(list(scrape_jobs)),
                 num_proxies=len(proxies),
-                num_threads=num_search_engines)
+                num_search_engines=num_search_engines,
+                num_threads=num_workers)
             )
 
             progress_thread = None
@@ -144,30 +143,36 @@ class Core():
                     for worker in range(num_workers):
                         num_worker += 1
                         workers.put(
-                            ScrapeWorkerFactory(
-                                config,
-                                cache_manager=cache_manager,
-                                mode=method,
-                                proxy=proxy,
-                                search_engine=search_engine,
-                                session=session,
-                                db_lock=db_lock,
-                                cache_lock=cache_lock,
-                                scraper_search=scraper_search,
-                                captcha_lock=captcha_lock,
-                                progress_queue=q,
-                                browser_num=num_worker
-                            )
+                                ScrapeWorkerFactory(
+                                        config,
+                                        cache_manager=cache_manager,
+                                        mode=method,
+                                        proxy=proxy,
+                                        search_engine=search_engine,
+                                        session=session,
+                                        db_lock=db_lock,
+                                        cache_lock=cache_lock,
+                                        scraper_search=scraper_search,
+                                        captcha_lock=captcha_lock,
+                                        progress_queue=q,
+                                        browser_num=num_worker
+                                )
                         )
 
-            # here we look for suitable workers
-            # for all jobs created.
+            # here we look for suitable workers for all jobs created.
             for job in scrape_jobs:
                 while True:
+                    # this gets one item from the queue
                     worker = workers.get()
-                    workers.put(worker)
+
+                    # this if condition simply checks if the job provides a search_engine and a scrape_method.
                     if worker.is_suitabe(job):
+
+                        # if yes, this function appends the page_number to the keyword job (self.job[query])
                         worker.add_job(job)
+
+                        # then simply puts back the item back to the workers queue
+                        workers.put(worker)
                         break
 
             threads = []
@@ -178,14 +183,21 @@ class Core():
                 if thread:
                     threads.append(thread)
 
-            for t in threads:
-                t.start()
+            num_thread = 0
 
-            for t in threads:
-                t.join()
+            while num_thread <= threads.__len__():
+
+                for t in threads[num_thread:num_thread + num_workers]:
+                    t.start()
+
+                for t in threads[num_thread:num_thread + num_workers]:
+                    t.join()
+
+                num_thread += num_workers
 
             # after threads are done, stop the progress queue.
             q.put('done')
+            # Blocks until all items in the queue have been gotten and processed.
             progress_thread.join()
 
         result_writer.close_outfile()

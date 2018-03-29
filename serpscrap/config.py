@@ -19,9 +19,9 @@ class Config():
     """
 
     config = {
-        'use_own_ip': True,
+        'use_own_ip': False,
         'search_engines': ['google'],
-        'num_pages_for_keyword': 2,
+        'num_pages_for_keyword': 1,
         'scrape_method': 'selenium',
         'sel_browser': 'phantomjs',
         'chrome_headless': True,
@@ -50,7 +50,7 @@ class Config():
             'Accept-Language': 'de-DE,de;q=0.8,en-US;q=0.6,en;q=0.4',
             'Accept-Encoding': 'gzip, deflate, br'
         },
-        'proxy_file': '',
+        'proxy_file': 'proxies.txr',
         'proxy_check_url': 'http://canihazip.com/s',
         'proxy_info_url': 'https://ipinfo.io/json',
         'stop_on_detection': True,
