@@ -38,6 +38,7 @@ class Parser():
         self.effective_query = ''
         self.page_number = -1
         self.no_results = False
+        # related_keywords have been added compared to GoogleScraper original code
         self.related_keywords = {}
 
         # to be set by the implementing sub classes

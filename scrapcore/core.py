@@ -143,20 +143,20 @@ class Core():
                     for worker in range(num_workers):
                         num_worker += 1
                         workers.put(
-                                ScrapeWorkerFactory(
-                                        config,
-                                        cache_manager=cache_manager,
-                                        mode=method,
-                                        proxy=proxy,
-                                        search_engine=search_engine,
-                                        session=session,
-                                        db_lock=db_lock,
-                                        cache_lock=cache_lock,
-                                        scraper_search=scraper_search,
-                                        captcha_lock=captcha_lock,
-                                        progress_queue=q,
-                                        browser_num=num_worker
-                                )
+                            ScrapeWorkerFactory(
+                                config,
+                                cache_manager=cache_manager,
+                                mode=method,
+                                proxy=proxy,
+                                search_engine=search_engine,
+                                session=session,
+                                db_lock=db_lock,
+                                cache_lock=cache_lock,
+                                scraper_search=scraper_search,
+                                captcha_lock=captcha_lock,
+                                progress_queue=q,
+                                browser_num=num_worker
+                            )
                         )
 
             # here we look for suitable workers for all jobs created.

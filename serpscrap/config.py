@@ -50,6 +50,12 @@ class Config():
             'Accept-Language': 'de-DE,de;q=0.8,en-US;q=0.6,en;q=0.4',
             'Accept-Encoding': 'gzip, deflate, br'
         },
+        'yandex_search_url': 'http://yandex.ru/yandsearch?',
+        'yahoo_search_url': 'https://fr.search.yahoo.com/search?',
+        'baidu_search_url': 'http://www.baidu.com/s?',
+        'duckduckgo_search_url': 'https://duckduckgo.com/',
+        'qwant_search_url': 'https://www.qwant.com/',
+        'ask_search_url': 'http://de.ask.com/web?',
         'proxy_file': 'proxies.txr',
         'proxy_check_url': 'http://canihazip.com/s',
         'proxy_info_url': 'https://ipinfo.io/json',

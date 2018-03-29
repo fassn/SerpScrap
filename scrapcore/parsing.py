@@ -4,6 +4,14 @@ import re
 
 from scrapcore.database import SearchEngineResultsPage
 from scrapcore.parser.google_parser import GoogleParser
+from scrapcore.parser.yandex_parser import YandexParser
+from scrapcore.parser.bing_parser import BingParser
+from scrapcore.parser.yahoo_parser import YahooParser
+from scrapcore.parser.baidu_parser import BaiduParser
+from scrapcore.parser.duckduckgo_parser import DuckduckgoParser
+from scrapcore.parser.qwant_parser import QwantParser
+from scrapcore.parser.ask_parser import AskParser
+
 
 logger = logging.getLogger(__name__)
 
@@ -16,6 +24,20 @@ class Parsing():
 
         if re.search(r'^http[s]?://www\.google', url):
             parser = GoogleParser
+        elif re.search(r'^http[s]?://yandex\.ru', url):
+            parser = YandexParser
+        elif re.search(r'^http://www\.bing\.', url):
+            parser = BingParser
+        elif re.search(r'^http[s]?://search\.yahoo.', url):
+            parser = YahooParser
+        elif re.search(r'^http://www\.baidu\.com', url):
+            parser = BaiduParser
+        elif re.search(r'^https://duckduckgo\.com', url):
+            parser = DuckduckgoParser
+        elif re.search(r'^https://qwant\.com', url):
+            parser = QwantParser
+        if re.search(r'^http[s]?://[a-z]{2}?\.ask', url):
+            parser = AskParser
         if not parser:
             raise Exception('No parser for {}.'.format(url))
 
@@ -25,6 +47,20 @@ class Parsing():
         """Get the appropriate parser for the search_engine"""
         if search_engine == 'google' or search_engine == 'googleimg':
             return GoogleParser
+        elif search_engine == 'yandex':
+            return YandexParser
+        elif search_engine == 'bing':
+            return BingParser
+        elif search_engine == 'yahoo':
+            return YahooParser
+        elif search_engine == 'baidu' or search_engine == 'baiduimg':
+            return BaiduParser
+        elif search_engine == 'duckduckgo':
+            return DuckduckgoParser
+        elif search_engine == 'ask':
+            return AskParser
+        elif search_engine == 'qwant':
+            return QwantParser
         else:
             raise Exception('No such parser for "{}"'.format(search_engine))
 

@@ -151,6 +151,7 @@ class SerpScrap():
                         'rank': related_keyword.rank
                     })
                 for link in serp.links:
+                    # Using an OrderedDict object to keep the CSV headers' output consistent.
                     d = {
                         'query_num_results total': serp.num_results_for_query,
                         'query_num_results_page': serp.num_results,
